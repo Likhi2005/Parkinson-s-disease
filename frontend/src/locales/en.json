@@ -206,19 +206,52 @@
     "shimmerDescription": "Amplitude variation in voice",
     "hnrDescription": "Clarity of voice signal"
   },
-  "healthTips": {
+ "healthTips": {
     "title": "Health Tips for Voice Care",
-    "generalTips": "General Voice Care",
-    "exerciseTips": "Voice Exercises",
-    "lifestyleTips": "Lifestyle Recommendations",
-    "stayHydrated": "Stay Hydrated",
-    "stayHydratedDesc": "Drink plenty of water to keep vocal cords moist",
-    "avoidSmoking": "Avoid Smoking",
-    "avoidSmokingDesc": "Smoking can damage vocal cords and affect voice quality",
-    "vocalExercises": "Practice Vocal Exercises",
-    "vocalExercisesDesc": "Regular voice exercises can help maintain voice quality",
-    "regularCheckups": "Regular Medical Checkups",
-    "regularCheckupsDesc": "Consult healthcare professionals for regular voice assessments"
+    "subtitle": "Personalized recommendations based on your voice analysis history",
+    "welcome": {
+      "title": "Welcome to Voice Health Monitoring",
+      "tip1": "Take your first voice analysis to get personalized health recommendations",
+      "tip2": "Regular monitoring can help detect early signs of health changes", 
+      "tip3": "Voice patterns can reveal important insights about neurological health"
+    },
+    "medical": {
+      "title": "Medical Consultation Recommended",
+      "tip1": "Consult with a neurologist for comprehensive evaluation",
+      "tip2": "Keep a record of your symptoms and voice analysis results",
+      "tip3": "Early intervention can significantly improve treatment outcomes",
+      "tip4": "Consider getting a second opinion from a movement disorder specialist"
+    },
+    "movement": {
+      "title": "Movement & Exercise",
+      "tip1": "Regular aerobic exercise can help maintain motor function",
+      "tip2": "Practice balance exercises daily to prevent falls",
+      "tip3": "Consider joining a Parkinson's exercise program",
+      "tip4": "Stretching exercises can help maintain flexibility"
+    },
+    "monitoring": {
+      "title": "Regular Monitoring",
+      "tip1": "Great job maintaining regular voice analysis!",
+      "tip2": "Track trends in your voice patterns over time", 
+      "tip3": "Share your analysis history with healthcare providers",
+      "tip4": "Consider weekly voice checks for optimal monitoring"
+    },
+    "voiceCare": {
+      "title": "Voice Care & Hygiene",
+      "tip1": "Stay hydrated - drink 8-10 glasses of water daily",
+      "tip2": "Avoid smoking and excessive alcohol consumption",
+      "tip3": "Practice vocal exercises to maintain voice strength",
+      "tip4": "Use a humidifier in dry environments",
+      "tip5": "Avoid shouting or straining your voice"
+    },
+    "lifestyle": {
+      "title": "Lifestyle Recommendations", 
+      "tip1": "Maintain a regular sleep schedule (7-9 hours nightly)",
+      "tip2": "Follow a Mediterranean diet rich in antioxidants",
+      "tip3": "Manage stress through meditation or yoga",
+      "tip4": "Stay socially active and engaged",
+      "tip5": "Limit caffeine intake, especially before voice analysis"
+    }
   },
   "errors": {
     "fileUploadError": "Error uploading file",
