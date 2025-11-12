@@ -5,7 +5,6 @@
 ![React](https://img.shields.io/badge/React-18.0-blue.svg)
 ![Flask](https://img.shields.io/badge/Flask-2.0-red.svg)
 ![Python](https://img.shields.io/badge/Python-3.8+-yellow.svg)
-![License](https://img.shields.io/badge/License-MIT-purple.svg)
 
 > **Revolutionary non-invasive screening that analyzes voice patterns to detect Parkinson's disease risk factors with clinical-grade accuracy.**
 
@@ -91,20 +90,21 @@
 ```bash
 git clone https://github.com/yourusername/parkinsons-voice-ai.git
 cd parkinsons-voice-ai
-
-Backend Setup
 ```
+
+### Backend Setup
+```bash
 cd backend
 pip install -r requirements.txt
 python app.py
 ```
-Frontend Setup
-```
+ ### Frontend Setup
+```bash
 cd frontend
 npm install
 npm run dev
 ```
-Access the Application
+### Access the Application
 Frontend: http://localhost:5173
 Backend API: http://localhost:5000
 
