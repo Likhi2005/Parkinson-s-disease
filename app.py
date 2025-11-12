@@ -3,7 +3,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="paramiko")
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="cryptography")
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,session
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_cors import CORS
 import os
 import uuid
@@ -13,6 +15,9 @@ import librosa
 import joblib
 from werkzeug.utils import secure_filename
 from utils.feature_extraction import extract_features_from_file
+from dbmodels.database import db, AnalysisHistory, UserSession
+from datetime import datetime
+import time
 import logging
 
 # Set up logging
@@ -21,7 +26,19 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # enable CORS for frontend communication
+CORS(app,supports_credentials=True)  # enable CORS for frontend communication
+
+
+# Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///parkinsons_analysis.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'your-secret-key-change-this'
+
+# Initialize extensions
+db.init_app(app)
+migrate = Migrate(app, db)
+
+
 
 # Configuration
 UPLOAD_FOLDER = "uploads"
@@ -45,6 +62,38 @@ def _allowed_file(filename):
     ext = os.path.splitext(filename)[1].lower()
     return ext in ALLOWED_EXTENSIONS
 
+
+# Create tables
+with app.app_context():
+    db.create_all()
+
+# def get_or_create_session():
+#     """Get or create user session"""
+#     if 'session_id' not in session:
+#         session['session_id'] = str(uuid.uuid4())
+    
+#     user_session = UserSession.query.filter_by(session_id=session['session_id']).first()
+#     if not user_session:
+#         user_session = UserSession(session_id=session['session_id'])
+#         db.session.add(user_session)
+#         db.session.commit()
+    
+#     return user_session
+
+def get_or_create_session():
+    """Get or create user session - simplified version"""
+    # For now, create a default session or use request headers
+    session_id = request.headers.get('X-Session-ID', 'default-session')
+    
+    user_session = UserSession.query.filter_by(session_id=session_id).first()
+    if not user_session:
+        user_session = UserSession(session_id=session_id)
+        db.session.add(user_session)
+        db.session.commit()
+    
+    return user_session
+
+
 @app.route('/')
 def index():
     return jsonify({
@@ -64,6 +113,7 @@ def health():
 @app.route('/predict', methods=['POST'])
 def predict():
     logger.info("Prediction request received")
+    start_time = time.time()
     
     if model is None:
         logger.error("Model not loaded")
@@ -99,6 +149,9 @@ def predict():
         file_path = os.path.join(UPLOAD_FOLDER, f"{file_id}_{filename}")
         file.save(file_path)
         logger.info(f"File saved successfully at: {file_path}")
+        
+        # Get file size
+        file_size = os.path.getsize(file_path)
 
         try:
             # Check if feature_columns.csv exists
@@ -142,18 +195,59 @@ def predict():
             if hasattr(model, 'predict_proba'):
                 probability = float(model.predict_proba(df_features)[0, 1])
             
+            # result = {
+            #     "prediction": int(prediction[0]),
+            #     "probability": probability,
+            #     "status": "Parkinson's Disease Detected" if prediction[0] == 1 else "Healthy",
+            #     "confidence": f"{probability*100:.1f}%" if probability is not None else "N/A",
+            #     "features": {k: float(v) for k, v in features.items()}
+            # }
+            
+            analysis_duration = time.time() - start_time
+            
+            # Save to database
+            analysis_record = AnalysisHistory(
+                filename=filename,
+                file_size=file_size,
+                prediction=int(prediction[0]),
+                probability=probability,
+                confidence=f"{probability*100:.1f}%" if probability is not None else "N/A",
+                status="Parkinson's Disease Detected" if prediction[0] == 1 else "Healthy",
+                analysis_duration=analysis_duration
+            )
+            analysis_record.set_features(features)
+            
+            db.session.add(analysis_record)
+            
+            # Update user session
+            user_session = get_or_create_session()
+            user_session.total_analyses += 1
+            user_session.last_analysis = datetime.utcnow()
+            
+            if prediction[0] == 1:
+                user_session.parkinsons_count += 1
+            else:
+                user_session.healthy_count += 1
+            
+            db.session.commit()
+            
             result = {
+                "id": analysis_record.id,
                 "prediction": int(prediction[0]),
                 "probability": probability,
                 "status": "Parkinson's Disease Detected" if prediction[0] == 1 else "Healthy",
                 "confidence": f"{probability*100:.1f}%" if probability is not None else "N/A",
-                "features": {k: float(v) for k, v in features.items()}
+                "features": {k: float(v) for k, v in features.items()},
+                "analysis_duration": analysis_duration,
+                "timestamp": analysis_record.timestamp.isoformat()
             }
+            
             
             logger.info("Analysis completed successfully")
             return jsonify(result)
 
         except Exception as e:
+            db.session.rollback()
             logger.error(f"Prediction error: {str(e)}")
             return jsonify({
                 "error": "Analysis failed",
@@ -174,6 +268,101 @@ def predict():
             "error": "Request processing failed",
             "detail": str(e)
         }), 500
+        
+#-------------------------History ----------------------------------
+
+@app.route('/history', methods=['GET'])
+def get_history():
+    """Get analysis history with pagination"""
+    try:
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+        
+        # Limit per_page to prevent large queries
+        per_page = min(per_page, 100)
+        
+        history = AnalysisHistory.query.order_by(
+            AnalysisHistory.timestamp.desc()
+        ).paginate(
+            page=page, 
+            per_page=per_page, 
+            error_out=False
+        )
+        
+        return jsonify({
+            "history": [record.to_dict() for record in history.items],
+            "pagination": {
+                "page": page,
+                "per_page": per_page,
+                "total": history.total,
+                "pages": history.pages,
+                "has_next": history.has_next,
+                "has_prev": history.has_prev
+            }
+        })
+    except Exception as e:
+        logger.error(f"History retrieval error: {str(e)}")
+        return jsonify({"error": "Failed to retrieve history"}), 500
+
+@app.route('/history/<int:analysis_id>', methods=['GET'])
+def get_analysis_detail(analysis_id):
+    """Get detailed analysis by ID"""
+    try:
+        analysis = AnalysisHistory.query.get_or_404(analysis_id)
+        return jsonify(analysis.to_dict())
+    except Exception as e:
+        logger.error(f"Analysis detail error: {str(e)}")
+        return jsonify({"error": "Analysis not found"}), 404
+
+@app.route('/history/stats', methods=['GET'])
+def get_analysis_stats():
+    """Get analysis statistics"""
+    try:
+        user_session = get_or_create_session()
+        
+        # Overall stats
+        total_analyses = AnalysisHistory.query.count()
+        healthy_count = AnalysisHistory.query.filter_by(prediction=0).count()
+        parkinsons_count = AnalysisHistory.query.filter_by(prediction=1).count()
+        
+        # Recent analyses (last 30 days)
+        from datetime import timedelta
+        thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+        recent_analyses = AnalysisHistory.query.filter(
+            AnalysisHistory.timestamp >= thirty_days_ago
+        ).count()
+        
+        return jsonify({
+            "session_stats": user_session.to_dict(),
+            "overall_stats": {
+                "total_analyses": total_analyses,
+                "healthy_count": healthy_count,
+                "parkinsons_count": parkinsons_count,
+                "recent_analyses": recent_analyses
+            }
+        })
+    except Exception as e:
+        logger.error(f"Stats error: {str(e)}")
+        return jsonify({"error": "Failed to retrieve statistics"}), 500
+
+@app.route('/history/<int:analysis_id>', methods=['DELETE'])
+def delete_analysis(analysis_id):
+    """Delete an analysis record"""
+    try:
+        analysis = AnalysisHistory.query.get_or_404(analysis_id)
+        db.session.delete(analysis)
+        db.session.commit()
+        
+        return jsonify({"message": "Analysis deleted successfully"})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Delete error: {str(e)}")
+        return jsonify({"error": "Failed to delete analysis"}), 500
+    
+    
+    
+    
+    
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)

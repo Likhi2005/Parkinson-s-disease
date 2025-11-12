@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../hooks/useLanguage';
 
 const HomePage = () => {
-    const { t } = useTranslation();
+    const { translate } = useLanguage();
     const navigate = useNavigate();
     const [currentStatIndex, setCurrentStatIndex] = useState(0);
 
     // Rotating statistics for visual interest
     const stats = [
-        { value: '95%', label: 'Accuracy Rate', icon: '🎯' },
-        { value: '2min', label: 'Analysis Time', icon: '⚡' },
-        { value: '10k+', label: 'Tests Completed', icon: '📊' },
-        { value: '24/7', label: 'Available', icon: '🔒' }
+        { value: '95%', label: translate('home.stats.accuracy'), icon: '🎯' },
+        { value: '2min', label: translate('home.stats.analysisTime'), icon: '⚡' },
+        { value: '10k+', label: translate('home.stats.testsCompleted'), icon: '📊' },
+        { value: '24/7', label: translate('home.stats.available'), icon: '🔒' }
     ];
 
     // Rotate stats every 3 seconds
@@ -26,48 +26,48 @@ const HomePage = () => {
     const features = [
         {
             icon: '🎤',
-            title: 'Voice Recording',
-            description: 'Simple 30-second voice recording with advanced acoustic analysis',
+            title: translate('home.features.voiceRecording.title'),
+            description: translate('home.features.voiceRecording.description'),
             color: 'from-blue-400 to-blue-600',
             bgGradient: 'from-blue-500/10 to-blue-600/5',
             borderColor: 'border-blue-400/30'
         },
         {
             icon: '🧠',
-            title: 'AI Analysis',
-            description: 'Machine learning algorithms trained on medical voice patterns',
+            title: translate('home.features.aiAnalysis.title'),
+            description: translate('home.features.aiAnalysis.description'),
             color: 'from-purple-400 to-purple-600',
             bgGradient: 'from-purple-500/10 to-purple-600/5',
             borderColor: 'border-purple-400/30'
         },
         {
             icon: '📊',
-            title: 'Instant Results',
-            description: 'Comprehensive health insights and personalized recommendations',
+            title: translate('home.features.instantResults.title'),
+            description: translate('home.features.instantResults.description'),
             color: 'from-pink-400 to-pink-600',
             bgGradient: 'from-pink-500/10 to-pink-600/5',
             borderColor: 'border-pink-400/30'
         },
         {
             icon: '🔒',
-            title: 'Privacy First',
-            description: 'HIPAA compliant with end-to-end encryption and local processing',
+            title: translate('home.features.privacyFirst.title'),
+            description: translate('home.features.privacyFirst.description'),
             color: 'from-green-400 to-green-600',
             bgGradient: 'from-green-500/10 to-green-600/5',
             borderColor: 'border-green-400/30'
         },
         {
             icon: '👨‍⚕️',
-            title: 'Medical Grade',
-            description: 'Validated by healthcare professionals and clinical research',
+            title: translate('home.features.medicalGrade.title'),
+            description: translate('home.features.medicalGrade.description'),
             color: 'from-violet-400 to-violet-600',
             bgGradient: 'from-violet-500/10 to-violet-600/5',
             borderColor: 'border-violet-400/30'
         },
         {
             icon: '🌐',
-            title: 'Global Access',
-            description: 'Available worldwide with multi-language support',
+            title: translate('home.features.globalAccess.title'),
+            description: translate('home.features.globalAccess.description'),
             color: 'from-cyan-400 to-cyan-600',
             bgGradient: 'from-cyan-500/10 to-cyan-600/5',
             borderColor: 'border-cyan-400/30'
@@ -76,27 +76,27 @@ const HomePage = () => {
 
     const testimonials = [
         {
-            text: "Early detection saved my quality of life. The AI caught patterns I couldn't notice.",
-            author: "Sarah M.",
-            role: "Patient",
+            text: translate('home.testimonials.patient.text'),
+            author: translate('home.testimonials.patient.author'),
+            role: translate('home.testimonials.patient.role'),
             rating: 5
         },
         {
-            text: "Remarkable accuracy. This tool enhances our diagnostic capabilities significantly.",
-            author: "Dr. James Wilson",
-            role: "Neurologist",
+            text: translate('home.testimonials.doctor.text'),
+            author: translate('home.testimonials.doctor.author'),
+            role: translate('home.testimonials.doctor.role'),
             rating: 5
         },
         {
-            text: "Simple, fast, and reliable. Perfect for regular health monitoring.",
-            author: "Michael R.",
-            role: "Health Enthusiast",
+            text: translate('home.testimonials.user.text'),
+            author: translate('home.testimonials.user.author'),
+            role: translate('home.testimonials.user.role'),
             rating: 5
         }
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 overflow-hidden">
+        <div className="min-h-screen overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
@@ -113,27 +113,28 @@ const HomePage = () => {
                             {/* Status Badge */}
                             <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-2 mb-8">
                                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                <span className="text-green-300 text-sm font-medium">AI System Online & Ready</span>
+                                <span className="text-green-300 text-sm font-medium">
+                                    {translate('home.hero.statusBadge')}
+                                </span>
                             </div>
 
                             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
                                 <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-violet-400 bg-clip-text text-transparent">
-                                    Parkinson's
+                                    {translate('home.hero.title.parkinson')}
                                 </span>
                                 <br />
                                 <span className="text-white">
-                                    Voice <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">AI</span>
+                                    {translate('home.hero.title.voice')} <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">{translate('home.hero.title.ai')}</span>
                                 </span>
                             </h1>
 
                             <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-                                Early detection through voice analysis powered by
-                                <span className="text-purple-300 font-semibold"> advanced AI technology</span>
+                                {translate('home.hero.subtitle.part1')}
+                                <span className="text-purple-300 font-semibold"> {translate('home.hero.subtitle.part2')}</span>
                             </p>
 
                             <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-                                Revolutionary non-invasive screening that analyzes voice patterns to detect
-                                Parkinson's disease risk factors with clinical-grade accuracy.
+                                {translate('home.hero.description')}
                             </p>
                         </div>
 
@@ -145,8 +146,8 @@ const HomePage = () => {
                             >
                                 <span className="text-2xl group-hover:animate-pulse">🎙️</span>
                                 <div className="text-left">
-                                    <div className="font-bold">Start Voice Analysis</div>
-                                    <div className="text-sm opacity-90">Free • Secure • 2 minutes</div>
+                                    <div className="font-bold">{translate('home.hero.cta.primary.title')}</div>
+                                    <div className="text-sm opacity-90">{translate('home.hero.cta.primary.subtitle')}</div>
                                 </div>
                                 <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">→</span>
 
@@ -162,7 +163,7 @@ const HomePage = () => {
                                 className="group border-2 border-purple-400/50 text-purple-300 hover:bg-purple-400/10 hover:border-purple-400 font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 flex items-center gap-3"
                             >
                                 <span className="text-2xl">📖</span>
-                                <span>Learn More</span>
+                                <span>{translate('home.hero.cta.secondary')}</span>
                                 <span className="text-xl transition-transform duration-300 group-hover:translate-y-1">↓</span>
                             </button>
                         </div>
@@ -192,11 +193,10 @@ const HomePage = () => {
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                                Why Choose Our <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">AI Platform?</span>
+                                {translate('home.features.title.part1')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{translate('home.features.title.part2')}</span>
                             </h2>
                             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                                Advanced technology meets medical expertise to provide accurate,
-                                accessible, and private health screening solutions.
+                                {translate('home.features.subtitle')}
                             </p>
                         </div>
 
@@ -232,16 +232,34 @@ const HomePage = () => {
                     <div className="max-w-6xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                                Simple <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">3-Step Process</span>
+                                {translate('home.howItWorks.title.part1')} <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{translate('home.howItWorks.title.part2')}</span>
                             </h2>
-                            <p className="text-xl text-gray-300">Get your health assessment in under 3 minutes</p>
+                            <p className="text-xl text-gray-300">{translate('home.howItWorks.subtitle')}</p>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-8">
                             {[
-                                { step: 1, icon: '🎙️', title: 'Record Voice', desc: 'Speak naturally for 30 seconds using our secure voice recorder', color: 'from-blue-400 to-blue-600' },
-                                { step: 2, icon: '🔬', title: 'AI Analysis', desc: 'Advanced algorithms analyze voice patterns and acoustic features', color: 'from-purple-400 to-purple-600' },
-                                { step: 3, icon: '📊', title: 'Get Results', desc: 'Receive detailed insights and personalized health recommendations', color: 'from-pink-400 to-pink-600' }
+                                {
+                                    step: 1,
+                                    icon: '🎙️',
+                                    title: translate('home.howItWorks.steps.record.title'),
+                                    desc: translate('home.howItWorks.steps.record.description'),
+                                    color: 'from-blue-400 to-blue-600'
+                                },
+                                {
+                                    step: 2,
+                                    icon: '🔬',
+                                    title: translate('home.howItWorks.steps.analyze.title'),
+                                    desc: translate('home.howItWorks.steps.analyze.description'),
+                                    color: 'from-purple-400 to-purple-600'
+                                },
+                                {
+                                    step: 3,
+                                    icon: '📊',
+                                    title: translate('home.howItWorks.steps.results.title'),
+                                    desc: translate('home.howItWorks.steps.results.description'),
+                                    color: 'from-pink-400 to-pink-600'
+                                }
                             ].map((item, index) => (
                                 <div key={index} className="relative text-center group">
                                     {/* Connection Line */}
@@ -272,9 +290,9 @@ const HomePage = () => {
                     <div className="max-w-6xl mx-auto">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                                Trusted by <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Healthcare Professionals</span>
+                                {translate('home.testimonials.title.part1')} <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">{translate('home.testimonials.title.part2')}</span>
                             </h2>
-                            <p className="text-xl text-gray-300">Real feedback from patients and medical experts</p>
+                            <p className="text-xl text-gray-300">{translate('home.testimonials.subtitle')}</p>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-8">
@@ -307,10 +325,10 @@ const HomePage = () => {
                 <section className="py-20 px-4 bg-gradient-to-r from-purple-900/30 to-pink-900/30">
                     <div className="max-w-4xl mx-auto text-center">
                         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                            Ready to Check Your <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Voice Health?</span>
+                            {translate('home.finalCta.title.part1')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{translate('home.finalCta.title.part2')}</span>
                         </h2>
                         <p className="text-xl text-gray-300 mb-8">
-                            Join thousands who have taken control of their health with our AI-powered voice analysis.
+                            {translate('home.finalCta.subtitle')}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
                             <Link
@@ -318,7 +336,7 @@ const HomePage = () => {
                                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center justify-center gap-3"
                             >
                                 <span className="text-2xl">🎙️</span>
-                                Start Free Analysis
+                                {translate('home.finalCta.primaryButton')}
                                 <span className="text-xl">→</span>
                             </Link>
                             <Link
@@ -326,7 +344,7 @@ const HomePage = () => {
                                 className="border-2 border-purple-400/50 text-purple-300 hover:bg-purple-400/10 font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 hover:shadow-xl flex items-center justify-center gap-3"
                             >
                                 <span className="text-2xl">📊</span>
-                                View Sample Results
+                                {translate('home.finalCta.secondaryButton')}
                             </Link>
                         </div>
                     </div>
@@ -336,10 +354,10 @@ const HomePage = () => {
                 <footer className="py-12 px-4 border-t border-slate-700/50">
                     <div className="max-w-6xl mx-auto text-center">
                         <p className="text-gray-400 mb-4">
-                            🔐 Your privacy is protected. All voice data is processed securely and never stored permanently.
+                            🔐 {translate('home.footer.privacy')}
                         </p>
                         <p className="text-gray-500 text-sm">
-                            © 2024 Parkinson's Voice AI. Medical technology for early detection and better health outcomes.
+                            {translate('home.footer.copyright')}
                         </p>
                     </div>
                 </footer>
