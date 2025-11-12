@@ -1,0 +1,41 @@
+# numpy
+# pandas
+# scikit-learn
+# matplotlib
+# seaborn
+# joblib
+# xgboost
+# librosa
+# soundfile
+# scipy
+# flask
+# shap
+# tensorflow  # optional, for Keras NN
+# jupyterlab
+
+
+# #backend libraries
+# Flask
+# flask-cors
+# joblib
+# librosa
+# numpy
+# soundfile
+# praat-parselmouth
+
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.0
+matplotlib==3.7.1
+seaborn==0.12.2
+joblib==1.3.0
+xgboost==1.7.6
+librosa==0.10.1
+soundfile==0.12.1
+scipy==1.11.1
+flask==2.3.2
+flask-cors==4.0.0
+shap==0.42.1
+tensorflow==2.13.0
+jupyterlab==4.0.3
+praat-parselmouth==0.4.3

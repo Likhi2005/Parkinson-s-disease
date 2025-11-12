@@ -1,0 +1,319 @@
+{
+  "nav": {
+    "home": "Home",
+    "recorder": "Voice Analysis",
+    "results": "Results",
+    "insights": "Insights",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "home": {
+    "title": "Parkinson's Voice AI",
+    "subtitle": "Early detection through voice analysis powered by advanced AI technology",
+    "description": "Revolutionary non-invasive screening that analyzes voice patterns to detect Parkinson's disease risk factors with clinical-grade accuracy.",
+    "systemOnline": "AI System Online & Ready",
+    "startAnalysis": "Start Voice Analysis",
+    "analysisCta": "Free • Secure • 2 minutes",
+    "learnMore": "Learn More",
+    "features": {
+      "title": "Why Choose Our AI Platform?",
+      "subtitle": "Advanced technology meets medical expertise to provide accurate, accessible, and private health screening solutions.",
+      "recording": {
+        "title": "Voice Recording",
+        "description": "Simple 30-second voice recording with advanced acoustic analysis"
+      },
+      "analysis": {
+        "title": "AI Analysis",
+        "description": "Machine learning algorithms trained on medical voice patterns"
+      },
+      "results": {
+        "title": "Instant Results",
+        "description": "Comprehensive health insights and personalized recommendations"
+      },
+      "privacy": {
+        "title": "Privacy First",
+        "description": "HIPAA compliant with end-to-end encryption and local processing"
+      },
+      "medical": {
+        "title": "Medical Grade",
+        "description": "Validated by healthcare professionals and clinical research"
+      },
+      "global": {
+        "title": "Global Access",
+        "description": "Available worldwide with multi-language support"
+      }
+    },
+    "howItWorks": {
+      "title": "Simple 3-Step Process",
+      "subtitle": "Get your health assessment in under 3 minutes",
+      "step1": {
+        "title": "Record Voice",
+        "description": "Speak naturally for 30 seconds using our secure voice recorder"
+      },
+      "step2": {
+        "title": "AI Analysis",
+        "description": "Advanced algorithms analyze voice patterns and acoustic features"
+      },
+      "step3": {
+        "title": "Get Results",
+        "description": "Receive detailed insights and personalized health recommendations"
+      }
+    },
+    "testimonials": {
+      "title": "Trusted by Healthcare Professionals",
+      "subtitle": "Real feedback from patients and medical experts",
+      "patient1": {
+        "text": "Early detection saved my quality of life. The AI caught patterns I couldn't notice.",
+        "author": "Sarah M.",
+        "role": "Patient"
+      },
+      "doctor1": {
+        "text": "Remarkable accuracy. This tool enhances our diagnostic capabilities significantly.",
+        "author": "Dr. James Wilson",
+        "role": "Neurologist"
+      },
+      "user1": {
+        "text": "Simple, fast, and reliable. Perfect for regular health monitoring.",
+        "author": "Michael R.",
+        "role": "Health Enthusiast"
+      }
+    },
+    "stats": {
+      "accuracy": "Accuracy Rate",
+      "analysisTime": "Analysis Time",
+      "testsCompleted": "Tests Completed",
+      "available": "Available"
+    },
+    "cta": {
+      "title": "Ready to Check Your Voice Health?",
+      "subtitle": "Join thousands who have taken control of their health with our AI-powered voice analysis.",
+      "startFree": "Start Free Analysis",
+      "viewSample": "View Sample Results"
+    },
+    "footer": {
+      "privacy": "Your privacy is protected. All voice data is processed securely and never stored permanently.",
+      "copyright": "© 2024 Parkinson's Voice AI. Medical technology for early detection and better health outcomes."
+    }
+  },
+  "recorder": {
+    "title": "Voice Recording Studio",
+    "subtitle": "Professional voice analysis in a secure environment",
+    "instructions": "Click the microphone button below and speak clearly for 10-30 seconds. Say anything comfortable like counting numbers, reading text, or having a natural conversation.",
+    "tips": {
+      "title": "Recording Tips for Best Results",
+      "tip1": "Find a quiet environment with minimal background noise",
+      "tip2": "Speak at your normal volume and pace",
+      "tip3": "Hold your device 6-12 inches from your mouth",
+      "tip4": "Record for at least 10 seconds for accurate analysis",
+      "tip5": "You can say anything - count numbers, read text, or speak naturally"
+    },
+    "controls": {
+      "startRecording": "Start Recording",
+      "stopRecording": "Stop Recording",
+      "playback": "Play Recording",
+      "reRecord": "Record Again",
+      "analyze": "Analyze Voice",
+      "upload": "Upload Audio File"
+    },
+    "status": {
+      "ready": "Ready to Record",
+      "recording": "Recording in Progress...",
+      "recorded": "Recording Complete",
+      "analyzing": "Analyzing Voice Patterns...",
+      "uploading": "Processing Audio...",
+      "error": "Recording Error"
+    },
+    "recordingTime": "Recording Time: {{time}}s",
+    "fileUpload": {
+      "title": "Or Upload Audio File",
+      "description": "Upload a voice recording (WAV, MP3, M4A)",
+      "dragDrop": "Drag and drop audio file here",
+      "browse": "Browse Files",
+      "requirements": "Requirements: 10-60 seconds, clear audio quality"
+    },
+    "analysis": {
+      "processing": "Processing your voice sample...",
+      "complete": "Analysis Complete!",
+      "viewResults": "View Results"
+    }
+  },
+  "results": {
+    "title": "Analysis Results",
+    "subtitle": "Your comprehensive voice health assessment",
+    "noResults": {
+      "title": "No Results Available",
+      "subtitle": "Ready to Discover Your Voice Health?",
+      "description": "Your personalized Parkinson's risk assessment is just one voice recording away. Get AI-powered insights in under 2 minutes.",
+      "features": {
+        "voiceAnalysis": "Advanced AI analyzes your voice patterns, pitch variations, and acoustic features to detect potential health indicators.",
+        "aiInsights": "Machine learning model trained on thousands of voice samples provides accurate Parkinson's risk evaluation.",
+        "healthTips": "Receive personalized health recommendations and lifestyle tips based on your voice analysis results."
+      },
+      "howItWorks": {
+        "title": "How It Works - Simple & Fast",
+        "step1": "Speak for 10-30 seconds using our secure voice recorder",
+        "step2": "AI processes your voice in real-time with advanced algorithms",
+        "step3": "Get detailed analysis with risk assessment and explanations",
+        "step4": "Receive personalized health tips and recommendations"
+      },
+      "cta": {
+        "primary": "Start Your Voice Analysis",
+        "secondary": "Preview Sample Results",
+        "learn": "Learn More"
+      },
+      "trustIndicators": {
+        "secure": "Secure - HIPAA Compliant",
+        "fast": "Fast - 2-Min Analysis",
+        "accurate": "Accurate - 95%+ Precision",
+        "free": "Free - No Cost"
+      }
+    },
+    "dashboard": {
+      "predictionResult": "Prediction Result",
+      "confidence": "Confidence Level",
+      "riskLevel": "Risk Assessment",
+      "healthStatus": "Health Status",
+      "recommendations": "Recommendations"
+    },
+    "actions": {
+      "viewInsights": "View Detailed Insights",
+      "newRecording": "New Recording",
+      "downloadReport": "Download Report",
+      "shareResults": "Share Results"
+    },
+    "disclaimer": {
+      "title": "Medical Disclaimer",
+      "text": "These results are for informational purposes only and should not be considered as medical advice. Please consult a healthcare professional for medical diagnosis and treatment recommendations."
+    }
+  },
+  "insights": {
+    "title": "Health Insights Dashboard",
+    "subtitle": "Comprehensive analysis of your voice patterns and health indicators",
+    "analysisComplete": "Analysis Complete",
+    "tabs": {
+      "explainability": {
+        "title": "AI Explainability",
+        "description": "Understand how AI made the prediction"
+      },
+      "voiceAnalysis": {
+        "title": "Voice Analysis",
+        "description": "Detailed voice pattern visualization"
+      },
+      "healthTips": {
+        "title": "Health Tips",
+        "description": "Personalized health recommendations"
+      },
+      "clinicalNotes": {
+        "title": "Clinical Notes",
+        "description": "Medical insights and observations"
+      }
+    },
+    "noData": {
+      "title": "No Prediction Data Available",
+      "subtitle": "To access detailed health insights and AI explainability analysis, you need to complete a voice analysis first.",
+      "howToStart": {
+        "title": "How to Get Started:",
+        "step1": {
+          "title": "Record Voice",
+          "description": "Record or upload your voice sample"
+        },
+        "step2": {
+          "title": "AI Analysis",
+          "description": "Get AI-powered health assessment"
+        },
+        "step3": {
+          "title": "View Insights",
+          "description": "Explore detailed analysis and tips"
+        }
+      },
+      "whatYouGet": {
+        "title": "What You'll Get After Analysis:",
+        "aiExplainability": "AI Explainability",
+        "voiceVisualization": "Voice Visualization",
+        "healthTips": "Health Tips",
+        "clinicalNotes": "Clinical Notes"
+      }
+    },
+    "clinicalNotes": {
+      "title": "Clinical Notes & Observations",
+      "subtitle": "Medical insights based on voice analysis",
+      "assessmentSummary": {
+        "title": "Clinical Assessment Summary",
+        "prediction": "Prediction:",
+        "confidence": "Confidence:",
+        "riskLevel": "Risk Level:",
+        "riskDetected": "Risk Detected",
+        "healthyPattern": "Healthy Pattern",
+        "elevated": "Elevated",
+        "normal": "Normal"
+      },
+      "recommendations": {
+        "title": "Recommendations",
+        "riskDetected": {
+          "consult": "Consult with a neurologist for further evaluation",
+          "assessment": "Consider comprehensive neurological assessment",
+          "monitoring": "Regular monitoring recommended"
+        },
+        "healthy": {
+          "normal": "Voice patterns within normal ranges",
+          "continue": "Continue regular health monitoring",
+          "maintain": "Maintain healthy lifestyle habits"
+        }
+      },
+      "voiceBiomarkers": {
+        "title": "Voice Biomarkers Analysis",
+        "jitter": {
+          "title": "Jitter Analysis",
+          "description": "Jitter measures pitch variation and is often elevated in Parkinson's disease due to vocal fold rigidity and reduced motor control."
+        },
+        "shimmer": {
+          "title": "Shimmer Analysis",
+          "description": "Shimmer indicates amplitude variation, which can reflect breath control issues and vocal muscle coordination problems common in neurological conditions."
+        },
+        "hnr": {
+          "title": "Harmonic-to-Noise Ratio",
+          "description": "Lower HNR values suggest breathiness or roughness in voice, often associated with reduced vocal cord function in Parkinson's patients."
+        }
+      }
+    },
+    "voiceAnalysis": {
+      "title": "Voice Pattern Analysis",
+      "subtitle": "Detailed visualization of your voice characteristics",
+      "audioNotAvailable": {
+        "title": "Audio File Not Available",
+        "description": "The original audio file is no longer available for visualization",
+        "action": "Record New Sample"
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "loadingInsights": "Loading Insights...",
+    "preparing": "Preparing your personalized analysis",
+    "error": "Something went wrong",
+    "tryAgain": "Try Again",
+    "back": "Back",
+    "backToHome": "Back to Home",
+    "backToResults": "Back to Results",
+    "next": "Next",
+    "cancel": "Cancel",
+    "save": "Save",
+    "download": "Download",
+    "upload": "Upload",
+    "share": "Share",
+    "close": "Close",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "finish": "Finish",
+    "retry": "Retry",
+    "free": "Free",
+    "secure": "Secure",
+    "fast": "Fast",
+    "accurate": "Accurate",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "newAnalysis": "New Analysis",
+    "home": "Home",
+    "globalHealthAccess": "Global Health Access"
+  }
+}

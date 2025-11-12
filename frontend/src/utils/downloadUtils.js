@@ -1,0 +1,428 @@
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+export const downloadUtils = {
+    // PDF Download with enhanced formatting
+    downloadAsPDF: (prediction, riskScore, status, confidence, riskLevel) => {
+        const pdf = new jsPDF();
+        const currentDate = new Date().toLocaleDateString();
+        const currentTime = new Date().toLocaleTimeString();
+
+        // Set up colors
+        const primaryColor = [75, 85, 99]; // slate-600
+        const accentColor = [139, 92, 246]; // violet-500
+        const riskColor = prediction.prediction === 1 ? [239, 68, 68] : [16, 185, 129]; // red-500 or green-500
+
+        // Header
+        pdf.setFontSize(24);
+        pdf.setTextColor(...accentColor);
+        pdf.text('🧠 Voice Analysis Report', 20, 30);
+
+        // Subtitle
+        pdf.setFontSize(12);
+        pdf.setTextColor(...primaryColor);
+        pdf.text('AI-Powered Parkinson\'s Voice Screening', 20, 40);
+
+        // Date and Time
+        pdf.setFontSize(10);
+        pdf.text(`Generated: ${currentDate} at ${currentTime}`, 20, 50);
+
+        // Main Results Section
+        pdf.setFontSize(16);
+        pdf.setTextColor(...accentColor);
+        pdf.text('Analysis Results', 20, 70);
+
+        pdf.setFontSize(12);
+        pdf.setTextColor(...primaryColor);
+
+        // Results table data
+        const resultsData = [
+            ['Status', status],
+            ['Risk Score', `${riskScore?.toFixed(1)}%` || 'N/A'],
+            ['Confidence Level', confidence],
+            ['Risk Category', riskLevel.level],
+            ['Prediction Type', prediction.prediction === 1 ? 'Positive Detection' : 'Negative Detection'],
+            ['Analysis Type', 'Voice Pattern Recognition']
+        ];
+
+        // Add results table
+        pdf.autoTable({
+            startY: 80,
+            head: [['Metric', 'Value']],
+            body: resultsData,
+            theme: 'grid',
+            headStyles: { fillColor: accentColor, textColor: 255 },
+            bodyStyles: { textColor: primaryColor },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            margin: { left: 20, right: 20 }
+        });
+
+        let yPos = pdf.lastAutoTable.finalY + 20;
+
+        // Voice Features Section
+        if (prediction.features) {
+            pdf.setFontSize(16);
+            pdf.setTextColor(...accentColor);
+            pdf.text('Voice Features Analysis', 20, yPos);
+            yPos += 10;
+
+            const featuresData = Object.entries(prediction.features).map(([feature, value]) => [
+                feature,
+                typeof value === 'number' ? value.toFixed(4) : value.toString()
+            ]);
+
+            pdf.autoTable({
+                startY: yPos,
+                head: [['Feature', 'Value']],
+                body: featuresData,
+                theme: 'grid',
+                headStyles: { fillColor: primaryColor, textColor: 255 },
+                bodyStyles: { textColor: primaryColor, fontSize: 9 },
+                alternateRowStyles: { fillColor: [248, 250, 252] },
+                margin: { left: 20, right: 20 },
+                pageBreak: 'auto'
+            });
+
+            yPos = pdf.lastAutoTable.finalY + 20;
+        }
+
+        // Recommendations Section
+        if (yPos > 250) {
+            pdf.addPage();
+            yPos = 30;
+        }
+
+        pdf.setFontSize(16);
+        pdf.setTextColor(...accentColor);
+        pdf.text('Recommendations', 20, yPos);
+        yPos += 15;
+
+        pdf.setFontSize(11);
+        pdf.setTextColor(...primaryColor);
+
+        const recommendations = [
+            '• Consult with a neurologist or movement disorder specialist',
+            '• Consider regular voice monitoring and analysis',
+            '• Practice recommended voice exercises daily',
+            '• Maintain good vocal hygiene (hydration, rest)',
+            '• Follow up with healthcare provider for clinical evaluation'
+        ];
+
+        recommendations.forEach(rec => {
+            pdf.text(rec, 25, yPos);
+            yPos += 8;
+        });
+
+        // Disclaimer
+        yPos += 10;
+        pdf.setFontSize(10);
+        pdf.setTextColor(200, 50, 50); // Red for warning
+        pdf.text('IMPORTANT DISCLAIMER:', 20, yPos);
+        yPos += 6;
+        pdf.setTextColor(...primaryColor);
+        const disclaimerText = 'This analysis is for screening purposes only and is NOT a medical diagnosis. Please consult with a qualified healthcare professional for proper medical evaluation and diagnosis.';
+        const splitDisclaimer = pdf.splitTextToSize(disclaimerText, 170);
+        pdf.text(splitDisclaimer, 20, yPos);
+
+        // Footer
+        const pageCount = pdf.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            pdf.setPage(i);
+            pdf.setFontSize(8);
+            pdf.setTextColor(128, 128, 128);
+            pdf.text(`Page ${i} of ${pageCount}`, 20, 285);
+            pdf.text('Generated by Parkinson\'s Voice Analysis Tool', 140, 285);
+        }
+
+        pdf.save(`voice-analysis-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    },
+
+    // CSV Download with structured data
+    downloadAsCSV: (prediction, riskScore, status, confidence, riskLevel) => {
+        const csvData = [];
+        const currentDate = new Date().toLocaleDateString();
+        const currentTime = new Date().toLocaleTimeString();
+
+        // Header information
+        csvData.push(['Voice Analysis Report', '']);
+        csvData.push(['Generated Date', currentDate]);
+        csvData.push(['Generated Time', currentTime]);
+        csvData.push(['']);
+
+        // Main results
+        csvData.push(['ANALYSIS RESULTS', '']);
+        csvData.push(['Status', status]);
+        csvData.push(['Risk Score', `${riskScore?.toFixed(1)}%` || 'N/A']);
+        csvData.push(['Confidence Level', confidence]);
+        csvData.push(['Risk Category', riskLevel.level]);
+        csvData.push(['Risk Description', riskLevel.description]);
+        csvData.push(['Prediction Type', prediction.prediction === 1 ? 'Positive Detection' : 'Negative Detection']);
+        csvData.push(['Prediction Value', prediction.prediction]);
+        csvData.push(['Probability Score', prediction.probability || 'N/A']);
+        csvData.push(['']);
+
+        // Voice features
+        if (prediction.features) {
+            csvData.push(['VOICE FEATURES', '']);
+            csvData.push(['Feature Name', 'Value', 'Normalized Value']);
+            Object.entries(prediction.features).forEach(([feature, value]) => {
+                const normalizedValue = typeof value === 'number' ? value.toFixed(6) : value;
+                csvData.push([feature, value, normalizedValue]);
+            });
+            csvData.push(['']);
+        }
+
+        // Statistics
+        csvData.push(['STATISTICS', '']);
+        csvData.push(['Total Features Analyzed', prediction.features ? Object.keys(prediction.features).length : 0]);
+        csvData.push(['Analysis Engine', 'Machine Learning AI']);
+        csvData.push(['Model Type', 'Voice Pattern Classification']);
+        csvData.push(['']);
+
+        // Disclaimer
+        csvData.push(['DISCLAIMER', '']);
+        csvData.push(['Important Note', 'This analysis is for screening purposes only and is NOT a medical diagnosis']);
+        csvData.push(['Recommendation', 'Please consult with a qualified healthcare professional for proper evaluation']);
+
+        const csvContent = csvData.map(row =>
+            row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `voice-analysis-data-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    },
+
+    // JSON Download with comprehensive data
+    downloadAsJSON: (prediction, riskScore, status, confidence, riskLevel) => {
+        const reportData = {
+            metadata: {
+                reportType: 'Voice Analysis Report',
+                generatedDate: new Date().toISOString(),
+                version: '1.0',
+                analysisEngine: 'Parkinson\'s Voice Detection AI',
+                modelType: 'Machine Learning Classification'
+            },
+            analysisResults: {
+                status: status,
+                riskScore: riskScore,
+                riskScorePercentage: `${riskScore?.toFixed(1)}%` || 'N/A',
+                confidenceLevel: confidence,
+                riskCategory: {
+                    level: riskLevel.level,
+                    description: riskLevel.description,
+                    color: riskLevel.color
+                },
+                prediction: {
+                    type: prediction.prediction === 1 ? 'Positive Detection' : 'Negative Detection',
+                    value: prediction.prediction,
+                    probability: prediction.probability,
+                    isHighRisk: prediction.prediction === 1
+                }
+            },
+            voiceFeatures: prediction.features ? {
+                totalFeatures: Object.keys(prediction.features).length,
+                features: prediction.features,
+                topFeatures: Object.entries(prediction.features)
+                    .sort(([, a], [, b]) => Math.abs(b) - Math.abs(a))
+                    .slice(0, 5)
+                    .map(([name, value], index) => ({
+                        rank: index + 1,
+                        name,
+                        value: typeof value === 'number' ? parseFloat(value.toFixed(6)) : value,
+                        importance: 'High'
+                    }))
+            } : null,
+            recommendations: [
+                'Consult with a neurologist or movement disorder specialist',
+                'Consider regular voice monitoring and periodic analysis',
+                'Practice recommended voice exercises and vocal hygiene',
+                'Follow up with healthcare provider for clinical evaluation',
+                'Maintain detailed records of voice changes over time'
+            ],
+            disclaimer: {
+                medicalDisclaimer: 'This analysis is for screening purposes only and is NOT a medical diagnosis',
+                recommendation: 'Please consult with a qualified healthcare professional for proper medical evaluation',
+                dataPrivacy: 'Voice data is processed locally and not stored on servers',
+                accuracy: 'Results may vary and should be interpreted by medical professionals'
+            },
+            technicalInfo: {
+                processingTime: 'Real-time analysis',
+                algorithm: 'Deep Learning Neural Network',
+                features: 'Voice frequency, jitter, shimmer, harmonic ratios',
+                dataFormat: 'Audio signal processing and feature extraction'
+            }
+        };
+
+        const blob = new Blob([JSON.stringify(reportData, null, 2)], {
+            type: 'application/json;charset=utf-8;'
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `voice-analysis-complete-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    },
+
+    // TXT Download with formatted report
+    downloadAsTXT: (prediction, riskScore, status, confidence, riskLevel) => {
+        const currentDate = new Date().toLocaleDateString();
+        const currentTime = new Date().toLocaleTimeString();
+
+        let txtContent = '';
+        txtContent += '═══════════════════════════════════════════════════════════════\n';
+        txtContent += '                    VOICE ANALYSIS REPORT                     \n';
+        txtContent += '           AI-Powered Parkinson\'s Voice Screening             \n';
+        txtContent += '═══════════════════════════════════════════════════════════════\n\n';
+
+        txtContent += `Report Generated: ${currentDate} at ${currentTime}\n`;
+        txtContent += `Analysis Engine: Machine Learning AI Classification\n`;
+        txtContent += `Report Version: 1.0\n\n`;
+
+        txtContent += '═══════════════════════════════════════════════════════════════\n';
+        txtContent += '                      ANALYSIS RESULTS                        \n';
+        txtContent += '═══════════════════════════════════════════════════════════════\n\n';
+
+        txtContent += `Status: ${status}\n`;
+        txtContent += `Risk Score: ${riskScore?.toFixed(1)}% || 'N/A'}\n`;
+        txtContent += `Confidence Level: ${confidence}\n`;
+        txtContent += `Risk Category: ${riskLevel.level}\n`;
+        txtContent += `Risk Description: ${riskLevel.description}\n`;
+        txtContent += `Prediction Type: ${prediction.prediction === 1 ? 'Positive Detection' : 'Negative Detection'}\n`;
+        txtContent += `Prediction Value: ${prediction.prediction}\n\n`;
+
+        if (prediction.features) {
+            txtContent += '═══════════════════════════════════════════════════════════════\n';
+            txtContent += '                    VOICE FEATURES ANALYSIS                   \n';
+            txtContent += '═══════════════════════════════════════════════════════════════\n\n';
+
+            txtContent += `Total Features Analyzed: ${Object.keys(prediction.features).length}\n\n`;
+
+            // Top 5 features
+            const topFeatures = Object.entries(prediction.features)
+                .sort(([, a], [, b]) => Math.abs(b) - Math.abs(a))
+                .slice(0, 5);
+
+            txtContent += 'TOP 5 CONTRIBUTING FEATURES:\n';
+            txtContent += '───────────────────────────────────────────────────────────────\n';
+            topFeatures.forEach(([feature, value], index) => {
+                txtContent += `${index + 1}. ${feature}: ${typeof value === 'number' ? value.toFixed(6) : value}\n`;
+            });
+            txtContent += '\n';
+
+            txtContent += 'ALL VOICE FEATURES:\n';
+            txtContent += '───────────────────────────────────────────────────────────────\n';
+            Object.entries(prediction.features).forEach(([feature, value]) => {
+                txtContent += `${feature.padEnd(25)}: ${typeof value === 'number' ? value.toFixed(6) : value}\n`;
+            });
+            txtContent += '\n';
+        }
+
+        txtContent += '═══════════════════════════════════════════════════════════════\n';
+        txtContent += '                      RECOMMENDATIONS                         \n';
+        txtContent += '═══════════════════════════════════════════════════════════════\n\n';
+
+        txtContent += '1. Consult with a neurologist or movement disorder specialist\n';
+        txtContent += '2. Consider regular voice monitoring and periodic analysis\n';
+        txtContent += '3. Practice recommended voice exercises:\n';
+        txtContent += '   - Humming exercises (30 seconds, 3x daily)\n';
+        txtContent += '   - Deep breathing exercises (5-10 minutes)\n';
+        txtContent += '   - Vowel sustaining (aaa, eee, ooo for 5 seconds each)\n';
+        txtContent += '   - Lip trills for vocal cord relaxation\n';
+        txtContent += '4. Maintain good vocal hygiene:\n';
+        txtContent += '   - Stay hydrated (8-10 glasses water daily)\n';
+        txtContent += '   - Avoid shouting or whispering excessively\n';
+        txtContent += '   - Take regular voice rest breaks\n';
+        txtContent += '   - Practice good posture while speaking\n';
+        txtContent += '5. Follow up with healthcare provider for clinical evaluation\n\n';
+
+        txtContent += '═══════════════════════════════════════════════════════════════\n';
+        txtContent += '                    IMPORTANT DISCLAIMER                       \n';
+        txtContent += '═══════════════════════════════════════════════════════════════\n\n';
+
+        txtContent += '⚠️  MEDICAL DISCLAIMER:\n';
+        txtContent += 'This analysis is for SCREENING PURPOSES ONLY and is NOT a medical\n';
+        txtContent += 'diagnosis. Please consult with a qualified healthcare professional\n';
+        txtContent += 'for proper medical evaluation and diagnosis.\n\n';
+
+        txtContent += '🔒 PRIVACY NOTICE:\n';
+        txtContent += 'Your voice recordings are processed locally and never stored on\n';
+        txtContent += 'our servers. All data processing is done in real-time.\n\n';
+
+        txtContent += '📚 EDUCATIONAL PURPOSE:\n';
+        txtContent += 'This AI tool is designed for educational and screening purposes.\n';
+        txtContent += 'Results may vary and should be interpreted by medical professionals.\n\n';
+
+        txtContent += '═══════════════════════════════════════════════════════════════\n';
+        txtContent += '          Report generated by Parkinson\'s Voice Analysis Tool   \n';
+        txtContent += '═══════════════════════════════════════════════════════════════\n';
+
+        const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `voice-analysis-report-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    },
+
+    // XML Download for structured data
+    downloadAsXML: (prediction, riskScore, status, confidence, riskLevel) => {
+        const currentDate = new Date().toISOString();
+
+        let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xmlContent += '<VoiceAnalysisReport>\n';
+        xmlContent += '  <Metadata>\n';
+        xmlContent += `    <GeneratedDate>${currentDate}</GeneratedDate>\n`;
+        xmlContent += '    <ReportType>Parkinson\'s Voice Analysis</ReportType>\n';
+        xmlContent += '    <Version>1.0</Version>\n';
+        xmlContent += '    <AnalysisEngine>Machine Learning AI</AnalysisEngine>\n';
+        xmlContent += '  </Metadata>\n\n';
+
+        xmlContent += '  <AnalysisResults>\n';
+        xmlContent += `    <Status>${status}</Status>\n`;
+        xmlContent += `    <RiskScore>${riskScore?.toFixed(1) || 'N/A'}</RiskScore>\n`;
+        xmlContent += `    <ConfidenceLevel>${confidence}</ConfidenceLevel>\n`;
+        xmlContent += `    <RiskCategory>${riskLevel.level}</RiskCategory>\n`;
+        xmlContent += `    <RiskDescription>${riskLevel.description}</RiskDescription>\n`;
+        xmlContent += `    <PredictionValue>${prediction.prediction}</PredictionValue>\n`;
+        xmlContent += `    <ProbabilityScore>${prediction.probability || 'N/A'}</ProbabilityScore>\n`;
+        xmlContent += '  </AnalysisResults>\n\n';
+
+        if (prediction.features) {
+            xmlContent += '  <VoiceFeatures>\n';
+            Object.entries(prediction.features).forEach(([feature, value]) => {
+                const sanitizedFeature = feature.replace(/[^a-zA-Z0-9]/g, '_');
+                xmlContent += `    <${sanitizedFeature}>${value}</${sanitizedFeature}>\n`;
+            });
+            xmlContent += '  </VoiceFeatures>\n\n';
+        }
+
+        xmlContent += '  <Disclaimer>\n';
+        xmlContent += '    <MedicalNotice>This is a screening tool only, not a medical diagnosis</MedicalNotice>\n';
+        xmlContent += '    <Recommendation>Consult healthcare professional for evaluation</Recommendation>\n';
+        xmlContent += '  </Disclaimer>\n';
+        xmlContent += '</VoiceAnalysisReport>';
+
+        const blob = new Blob([xmlContent], { type: 'application/xml;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `voice-analysis-data-${new Date().toISOString().split('T')[0]}.xml`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    }
+};
